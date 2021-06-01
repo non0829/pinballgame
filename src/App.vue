@@ -1,28 +1,53 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <component
+      :is="currentComponent[currentNumber]"
+      @next="addCurrentNumber"
+      @back="backCurrentNumber"
+    ></component>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Home from "./components/Home.vue";
+import IsPlaying from "./components/IsPlaying.vue";
+import Final from "./components/Final.vue";
 
 export default {
-  name: 'App',
+  data() {
+    return {
+      currentComponent: ["Home", "IsPlaying", "Final"],
+      currentNumber: 1,
+    };
+  },
   components: {
-    HelloWorld
-  }
-}
+    Home,
+    IsPlaying,
+    Final,
+  },
+  methods: {
+    addCurrentNumber() {
+      this.currentNumber++;
+      if (this.currentNumber === 3) {
+        this.currentNumber = 0;
+      }
+    },
+    backCurrentNumber() {
+      this.currentNumber--;
+    },
+  },
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+* {
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+button {
+  display: block;
+  width: 20%;
+  height: 15%;
 }
 </style>
