@@ -1,27 +1,28 @@
 <template>
   <div class="box">
     <BlockBack />
+    <!-- <button @click="toHome" class="toHome">ホーム画面</button> -->
     <div class="mainGame">
-    <h2>IsPlaying</h2>
-    <button @click="toHome">ホームに戻る</button>
-    <button @click="next">結果</button>
+      <Display />
     </div>
   </div>
 </template>
 
 <script>
 import BlockBack from "./_BlockBack.vue";
+import Display from "./_Display.vue";
 export default {
   components: {
     BlockBack,
+    Display,
   },
   methods: {
-    next() {
-      this.$emit("next");
-    },
-    toHome() {
-      this.$emit("back");
-    },
+    // next() {
+    //   this.$emit("next");
+    // },
+    // toHome() {
+    //   this.$emit("back");
+    // },
   },
 };
 </script>
@@ -37,8 +38,26 @@ export default {
 .mainGame {
   z-index: 1;
   position: absolute;
-  top: 20%;
+  top: 5%;
   left: 0;
   right: 0;
+  height: 100%;
 }
+/* .toHome {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  height: 40px;
+  background-color: wheat;
+  border-radius: 5px;
+  box-shadow: 0 3px 2px black;
+ 
+}
+.toHome:hover {
+  opacity: 0.8;
+}
+.toHome:active {
+  box-shadow: none;
+  transform: translateY(3px);
+} */
 </style>
