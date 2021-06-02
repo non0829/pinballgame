@@ -1,8 +1,14 @@
 <template>
   <div class="flex">
-    <Game class="display"></Game>
+    <Game
+      class="display"
+      @minus10="$emit('minus10')"
+      @plus10="$emit('plus10')"
+      @plus20="$emit('plus20')"
+      @plus30="$emit('plus30')"
+    ></Game>
     <div class="side-menu">
-      <p>サイドメニュー</p>
+      <p>{{ point }}</p>
     </div>
   </div>
 </template>
@@ -10,7 +16,8 @@
 <script>
 import Game from "./__Game.vue";
 export default {
-  components: {Game},
+  components: { Game },
+  props: ["point"],
 };
 </script>
 

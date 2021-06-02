@@ -91,6 +91,28 @@ export default {
         }
       }
     },
+    pointCheck(move) {
+      if (this.ball.y -this.ball.r !== 0) {
+        return;
+      }
+      console.log('ポイント追加')
+      if(this.ball.x > 0 && this.ball.x < 100) {
+        this.$emit('plus10')
+      }
+      if(this.ball.x > 100 && this.ball.x < 200) {
+        this.$emit('minus10')
+      }
+      if(this.ball.x > 200 && this.ball.x < 300) {
+        this.$emit('plus30')
+      }
+      if(this.ball.x > 300 && this.ball.x < 400) {
+        clearTimeout(move)
+      }
+      if(this.ball.x > 400 && this.ball.x < 500) {
+        this.$emit('plus10')
+      }
+      
+    },
     reset(ctx) {
       ctx.clearRect(0, 0, 500, 500);
       this.drawLine(ctx);
@@ -107,21 +129,22 @@ export default {
         this.ball.dy *= -1;
       }
       if (this.ball.y > 0 && this.ball.y < this.lineLength) {
-        for(let i = 1; i <= 4; i++) {
-          if(this.ball.x + this.ball.r === i * 100) {
+        for (let i = 1; i <= 4; i++) {
+          if (this.ball.x + this.ball.r === i * 100) {
             this.ball.dx *= -1;
           }
-          if(this.ball.x - this.ball.r === i * 100) {
+          if (this.ball.x - this.ball.r === i * 100) {
             this.ball.dx *= -1;
           }
         }
-      } 
+      }
 
       this.ball.x += this.ball.dx;
       this.ball.y += this.ball.dy;
       this.reset(ctx);
 
       this.collide();
+      this.pointCheck(move);
 
       // ボールを動かす
       let move = setTimeout(() => {

@@ -1,9 +1,14 @@
 <template>
   <div class="box">
     <BlockBack />
-    <!-- <button @click="toHome" class="toHome">ホーム画面</button> -->
     <div class="mainGame">
-      <Display />
+      <Display
+        :point="point"
+        @minus10="$emit('minus10')"
+        @plus10="$emit('plus10')"
+        @plus20="$emit('plus20')"
+        @plus30="$emit('plus30')"
+      />
     </div>
   </div>
 </template>
@@ -16,14 +21,7 @@ export default {
     BlockBack,
     Display,
   },
-  methods: {
-    // next() {
-    //   this.$emit("next");
-    // },
-    // toHome() {
-    //   this.$emit("back");
-    // },
-  },
+  props: ["point"],
 };
 </script>
 
@@ -43,21 +41,4 @@ export default {
   right: 0;
   height: 100%;
 }
-/* .toHome {
-  position: absolute;
-  top: 30px;
-  right: 30px;
-  height: 40px;
-  background-color: wheat;
-  border-radius: 5px;
-  box-shadow: 0 3px 2px black;
- 
-}
-.toHome:hover {
-  opacity: 0.8;
-}
-.toHome:active {
-  box-shadow: none;
-  transform: translateY(3px);
-} */
 </style>
