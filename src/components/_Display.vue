@@ -6,6 +6,7 @@
       @plus10="$emit('plus10')"
       @plus20="$emit('plus20')"
       @plus30="$emit('plus30')"
+      @plusRandom="$emit('plusRandom')"
     ></Game>
     <div class="side-menu">
       <p>{{ point }}</p>

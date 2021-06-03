@@ -1,5 +1,7 @@
 <template>
+<div>
   <canvas id="mycanvas" width="500" height="500"></canvas>
+</div>
 </template>
 
 <script>
@@ -35,7 +37,7 @@ export default {
       }
     },
     drawText(ctx) {
-      let text = ["10", "-10", "30", "finish", "20"];
+      let text = ["10", "-10", "30", "???", "20"];
       ctx.font = "italic bold 20px sans-serif";
       for (let i = 0; i <= 4; i++) {
         if (i === 0) {
@@ -47,11 +49,7 @@ export default {
         } else {
           ctx.fillStyle = "black";
         }
-        if (i === 3) {
-          ctx.fillText(text[i], 20 + i * 100, 40, 60);
-        } else {
-          ctx.fillText(text[i], 35 + i * 100, 40, 60);
-        }
+        ctx.fillText(text[i], 35 + i * 100, 40, 60);
       }
     },
     drawBall(ctx) {
@@ -91,27 +89,28 @@ export default {
         }
       }
     },
-    pointCheck(move) {
-      if (this.ball.y -this.ball.r !== 0) {
+    pointCheck() {
+      if (this.ball.y - this.ball.r !== 0) {
         return;
       }
-      console.log('ポイント追加')
-      if(this.ball.x > 0 && this.ball.x < 100) {
-        this.$emit('plus10')
+      console.log("ポイント追加");
+      if (this.ball.x > 0 && this.ball.x < 100) {
+        this.$emit("plus10");
       }
-      if(this.ball.x > 100 && this.ball.x < 200) {
-        this.$emit('minus10')
+      if (this.ball.x > 100 && this.ball.x < 200) {
+        this.$emit("minus10");
       }
-      if(this.ball.x > 200 && this.ball.x < 300) {
-        this.$emit('plus30')
+      if (this.ball.x > 200 && this.ball.x < 300) {
+        this.$emit("plus30");
       }
-      if(this.ball.x > 300 && this.ball.x < 400) {
-        clearTimeout(move)
+      if (this.ball.x > 300 && this.ball.x < 400) {
+        this.ball.dx = Math.floor(Math.random() * 2) + 8;
+        this.ball.dy = Math.floor(Math.random() * 2) + 8;
+        this.$emit("plusRandom");
       }
-      if(this.ball.x > 400 && this.ball.x < 500) {
-        this.$emit('plus10')
+      if (this.ball.x > 400 && this.ball.x < 500) {
+        this.$emit("plus10");
       }
-      
     },
     reset(ctx) {
       ctx.clearRect(0, 0, 500, 500);
@@ -155,6 +154,7 @@ export default {
       if (this.ball.y + this.ball.r > 480) {
         console.log("hi");
         clearTimeout(move);
+        this.$emit('finish')
       }
     },
   },

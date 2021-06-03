@@ -24,6 +24,7 @@ export default {
       currentComponent: ["Home", "IsPlaying", "Final"],
       currentNumber: 1,
       point: 0,
+      currentPlusPoint: 0,
     };
   },
   components: {
@@ -42,19 +43,28 @@ export default {
       this.currentNumber--;
     },
     minus10() {
-      this.point += 10
+      this.currentPlusPoint = 10
+      this.point -= this.currentPlusPoint
       console.log(this.point)
     },
     plus10() {
-      this.point += 10
+      this.currentPlusPoint = 10
+      this.point += this.currentPlusPoint
       console.log(this.point)
     },
     plus20() {
-      this.point += 20
+      this.currentPlusPoint = 20
+      this.point += this.currentPlusPoint
       console.log(this.point)
     },
     plus30() {
-      this.point += 30
+      this.currentPlusPoint = 30
+      this.point += this.currentPlusPoint
+      console.log(this.point)
+    },
+    plusRandom() {
+      this.currentPlusPoint = Math.floor(Math.random() * 60) - 30
+      this.point += this.currentPlusPoint
       console.log(this.point)
     }
   },
