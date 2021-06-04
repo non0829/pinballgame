@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <BlockBack />
-    <h1>最終結果</h1>
+    <h1>最終結果 <br> {{point}}pt</h1>
     <div class="buttonBox">
       <button @click="playAgain">もう一度遊ぶ</button>
       <button @click="back">もとに戻る</button>
@@ -15,6 +15,7 @@ export default {
   components: {
     BlockBack,
   },
+  props: ['point'],
   methods: {
     back() {
       this.$emit("next");
@@ -60,6 +61,7 @@ h1 {
   position: absolute;
   margin-top: 30px;
 }
+
 button {
   font-size: 20px;
   line-height: 2;

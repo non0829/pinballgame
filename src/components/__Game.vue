@@ -1,7 +1,7 @@
 <template>
-<div>
-  <canvas id="mycanvas" width="500" height="500"></canvas>
-</div>
+  <div>
+    <canvas id="mycanvas" width="500" height="520"></canvas>
+  </div>
 </template>
 
 <script>
@@ -9,10 +9,15 @@ export default {
   data() {
     return {
       ball: {
-        x: 100,
+        // x: 490,
+        // y: 30,
+        // r: 10,
+        // dx: 1,
+        // dy: 10,
+        x: 120,
         y: 200,
         r: 10,
-        dx: 10,
+        dx: 5,
         dy: 10,
       },
       bar: {
@@ -20,14 +25,117 @@ export default {
         y: 450,
         dx: 10,
       },
+      pin: [
+        {
+          x: 100,
+          y: 55,
+          r: 5,
+        },
+        {
+          x: 200,
+          y: 55,
+          r: 5,
+        },
+        {
+          x: 300,
+          y: 55,
+          r: 5,
+        },
+        {
+          x: 400,
+          y: 55,
+          r: 5,
+        },
+        {
+          x: 205,
+          y: 65,
+          r: 5,
+        },
+        {
+          x: 295,
+          y: 65,
+          r: 5,
+        },
+        {
+          x: 100,
+          y: 130,
+          r: 5,
+        },
+        {
+          x: 250,
+          y: 130,
+          r: 5,
+        },
+        {
+          x: 400,
+          y: 130,
+          r: 5,
+        },
+        {
+          x: 25,
+          y: 230,
+          r: 5,
+        },
+        {
+          x: 50,
+          y: 250,
+          r: 5,
+        },
+        {
+          x: 175,
+          y: 200,
+          r: 5,
+        },
+        {
+          x: 325,
+          y: 200,
+          r: 5,
+        },
+        {
+          x: 450,
+          y: 250,
+          r: 5,
+        },
+        {
+          x: 475,
+          y: 230,
+          r: 5,
+        },
+        {
+          x: 100,
+          y: 300,
+          r: 5,
+        },
+        {
+          x: 400,
+          y: 300,
+          r: 5,
+        },
+        {
+          x: 250,
+          y: 300,
+          r: 5,
+        },
+        {
+          x: 20,
+          y: 370,
+          r: 5,
+        },
+        {
+          x: 480,
+          y: 370,
+          r: 5,
+        },
+      ],
       lineLength: 60,
       point: 0,
+      speed: 100,
     };
   },
   methods: {
     drawLine(ctx) {
       ctx.lineCap = "round";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 1;
       for (let i = 1; i <= 5; i++) {
         ctx.beginPath();
         ctx.moveTo(100 * i, 0);
@@ -54,7 +162,17 @@ export default {
     },
     drawBall(ctx) {
       ctx.beginPath();
-      ctx.fillStyle = "black";
+      let gladation = ctx.createRadialGradient(
+        this.ball.x,
+        this.ball.y,
+        0,
+        this.ball.x,
+        this.ball.y,
+        this.ball.r
+      );
+      gladation.addColorStop(0, "gray");
+      gladation.addColorStop(1, "black");
+      ctx.fillStyle = gladation;
       ctx.arc(
         this.ball.x,
         this.ball.y,
@@ -63,6 +181,30 @@ export default {
         (Math.PI * 360) / 180
       );
       ctx.fill();
+    },
+    drawCircle(ctx) {
+      for (let i = 0; i < this.pin.length; i++) {
+        ctx.beginPath();
+        let gladation = ctx.createRadialGradient(
+          this.pin[i].x,
+          this.pin[i].y,
+          0,
+          this.pin[i].x,
+          this.pin[i].y,
+          this.pin[i].r
+        );
+        gladation.addColorStop(0, "white");
+        gladation.addColorStop(1, "black");
+        ctx.fillStyle = gladation;
+        ctx.arc(
+          this.pin[i].x,
+          this.pin[i].y,
+          this.pin[i].r,
+          (Math.PI * 0) / 180,
+          (Math.PI * 360) / 180
+        );
+        ctx.fill();
+      }
     },
     drawUnderbar(ctx) {
       ctx.lineWidth = 7;
@@ -74,87 +216,144 @@ export default {
       ctx.closePath();
       ctx.stroke();
     },
-    collide() {
-      if (this.ball.y + this.ball.r * 2 === this.bar.y) {
-        if (this.ball.x > this.bar.x && this.ball.x < this.bar.x + 100) {
-          this.ball.dy *= -1;
-        }
+    collideBar() {
+      if (this.ball.y + this.ball.r === this.bar.y) {
         if (this.ball.x > this.bar.x - 20 && this.ball.x <= this.bar.x) {
-          this.ball.dy *= -1;
+          if (this.ball.dx < 0) {
+            return;
+          }
+          this.ball.dx += -5 + Math.floor(Math.random() * 10);
           this.ball.dx *= -1;
+          this.ball.dy *= -1;
+          console.log("hitLeft");
+        }
+        if (this.ball.x > this.bar.x && this.ball.x <= this.bar.x + 100) {
+          this.ball.dy *= -1;
         }
         if (this.ball.x > this.bar.x + 100 && this.ball.x <= this.bar.x + 120) {
-          this.ball.dy *= -1;
+          if (this.ball.dx > 0) {
+            return;
+          }
+          this.ball.dx += -5 + Math.floor(Math.random() * 10);
           this.ball.dx *= -1;
+          this.ball.dy *= -1;
+          console.log("hitRight");
         }
       }
+    },
+    collideCircle() {
+      // ピンのあたり方による跳ね返り方設定
+      for (let i = 0; i < this.pin.length; i++) {
+        if (
+          Math.pow(this.ball.x - this.pin[i].x, 2) +
+            Math.pow(this.ball.y - this.pin[i].y, 2) <=
+          Math.pow(this.ball.r + this.pin[i].r, 2)
+        ) {
+          if (
+            Math.abs(this.ball.x - this.pin[i].x) <=
+            (this.ball.r + this.pin[i].r) / Math.sqrt(2)
+          ) {
+            this.ball.dy *= -1;
+            return;
+          }
+          if (
+            Math.abs(this.ball.y - this.pin[i].y) <=
+            (this.ball.r + this.pin[i].r) / Math.sqrt(2)
+          ) {
+            this.ball.dx *= -1;
+            return;
+          }
+        }
+      }
+    },
+    collideBorder() {
+      // 跳ね返す設定
+      if (this.ball.x + this.ball.r > 500 || this.ball.x < this.ball.r) {
+        this.ball.dx *= -1;
+      }
+      if (this.ball.y + this.ball.r > 500 || this.ball.y < this.ball.r) {
+        this.ball.dy *= -1;
+        console.log("bounce");
+      }
+      if (this.ball.y < this.lineLength) {
+        for (let i = 1; i <= 4; i++) {
+          if (this.ball.x + this.ball.r >= i * 100) {
+            this.ball.dx *= -1;
+          }
+          if (this.ball.x - this.ball.r <= i * 100) {
+            this.ball.dx *= -1;
+          }
+        }
+      }
+      // if (Math.abs(this.ball.y - this.ball.r - this.lineLength) < 5) {
+      //   for (let i = 1; i <= 4; i++) {
+      //     if (
+      //       this.ball.x + this.ball.r >= i * 100 - 10 &&
+      //       this.ball.x - this.ball.r <= i * 100 + 10
+      //     ) {
+      //       this.ball.dy *= -1;
+      //     }
+      //   }
+      // }
     },
     pointCheck() {
       if (this.ball.y - this.ball.r !== 0) {
         return;
       }
       console.log("ポイント追加");
-      if (this.ball.x > 0 && this.ball.x < 100) {
+      this.ball.dx =
+        Math.floor(Math.random() * 15) *
+        Math.pow(-1, Math.floor(Math.random() * 2));
+      if (this.ball.x > 0 && this.ball.x <= 100) {
         this.$emit("plus10");
+        this.speed /= 1.01;
       }
-      if (this.ball.x > 100 && this.ball.x < 200) {
+      if (this.ball.x > 100 && this.ball.x <= 200) {
         this.$emit("minus10");
       }
-      if (this.ball.x > 200 && this.ball.x < 300) {
+      if (this.ball.x > 200 && this.ball.x <= 300) {
+        this.ball.dx =
+          (Math.floor(Math.random() * 5) + 2) *
+          Math.pow(-1, Math.floor(Math.random() * 2));
+        this.speed /= 1.03;
         this.$emit("plus30");
       }
-      if (this.ball.x > 300 && this.ball.x < 400) {
-        this.ball.dx = Math.floor(Math.random() * 2) + 8;
-        this.ball.dy = Math.floor(Math.random() * 2) + 8;
+      if (this.ball.x > 300 && this.ball.x <= 400) {
+        this.speed /= 1.03;
         this.$emit("plusRandom");
       }
       if (this.ball.x > 400 && this.ball.x < 500) {
-        this.$emit("plus10");
+        this.speed /= 1.02;
+        this.$emit("plus20");
       }
     },
     reset(ctx) {
       ctx.clearRect(0, 0, 500, 500);
       this.drawLine(ctx);
       this.drawText(ctx);
+      this.drawCircle(ctx);
       this.drawBall(ctx);
       this.drawUnderbar(ctx);
     },
     load(ctx) {
-      // 跳ね返す設定
-      if (this.ball.x + this.ball.r === 500 || this.ball.x === this.ball.r) {
-        this.ball.dx *= -1;
-      }
-      if (this.ball.y + this.ball.r === 500 || this.ball.y === this.ball.r) {
-        this.ball.dy *= -1;
-      }
-      if (this.ball.y > 0 && this.ball.y < this.lineLength) {
-        for (let i = 1; i <= 4; i++) {
-          if (this.ball.x + this.ball.r === i * 100) {
-            this.ball.dx *= -1;
-          }
-          if (this.ball.x - this.ball.r === i * 100) {
-            this.ball.dx *= -1;
-          }
-        }
-      }
-
+      this.collideCircle();
+      this.collideBorder();
+      this.pointCheck();
+      this.collideBar(ctx);
       this.ball.x += this.ball.dx;
       this.ball.y += this.ball.dy;
       this.reset(ctx);
 
-      this.collide();
-      this.pointCheck(move);
-
       // ボールを動かす
       let move = setTimeout(() => {
         this.load(ctx);
-      }, 100);
+      }, this.speed);
 
       // 終わり判定
       if (this.ball.y + this.ball.r > 480) {
-        console.log("hi");
-        clearTimeout(move);
+        console.log("finish");
         this.$emit('finish')
+        clearTimeout(move);
       }
     },
   },
@@ -199,9 +398,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-#mycanvas {
-  background-color: rgba(185, 233, 252, 0.377);
-}
-</style>

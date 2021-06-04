@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <h1 class="boxChild">崩せ！ブロックの壁</h1>
+    <h1 class="boxChild">ミニピンボール</h1>
     <transition tag="template" name="fade">
       <div
         class="flex boxChild"
@@ -13,10 +13,10 @@
       </div>
     </transition>
     <transition tag="template" name="fade">
-      <description @back="changeDescription" :description="description"></description>
+      <description @back="changeDescription" v-if="description"></description>
     </transition>
     <transition tag="template" name="fade">
-      <result @back="changeResult" :result="result"></result>
+      <result @back="changeResult" :recordAll="recordAll" v-if="result"></result>
     </transition>
     <BlockBack />
   </div>
@@ -32,6 +32,7 @@ export default {
     description,
     result
   },
+  props: ['recordAll'],
   data() {
     return {
       description: false,
@@ -41,6 +42,7 @@ export default {
   methods: {
     changeDescription() {
       this.description = !this.description;
+      console.log(this.description)
     },
     changeResult() {
       this.result = !this.result;
@@ -80,7 +82,7 @@ button {
   background-color: rgba(255, 255, 255, 0.6);
   border-radius: 5px;
   padding: 5px;
-  border: 5px solid rgb(98, 119, 119);
+  border: 5px solid rgb(75, 88, 88);
   margin-top: 30px;
   font-size: 40px;
   top: 20%;
@@ -101,12 +103,12 @@ button {
   flex-shrink: 0;
 }
 button {
+  box-shadow: 0 3px 2px rgba(0, 0, 0, 0.5);
   font-size: 20px;
-  opacity: 1;
   margin: 0 auto 20px;
   width: 300px;
   transition: opacity linear;
-  transition-duration: 5s;
+  transition-duration: 0.3s;
 }
 button:hover {
   cursor: pointer;

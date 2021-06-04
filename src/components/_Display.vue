@@ -7,9 +7,22 @@
       @plus20="$emit('plus20')"
       @plus30="$emit('plus30')"
       @plusRandom="$emit('plusRandom')"
+      @finish="$emit('finish')"
     ></Game>
     <div class="side-menu">
-      <p>{{ point }}</p>
+      <h3 v-if="currentPlusPoint !== 0" class="side-menu-item item1">
+        {{ currentPlusPoint }}pt!
+      </h3>
+      <p class="side-menu-item hit-count" v-if="collideCount !== 0">{{collideCount}} hit!</p>
+      <div v-if="collideCount % 5 === 0 && this.collideCount !== 0" class="side-menu-item bonus">
+        <p>{{collideCount}}連チャン！</p>
+        <p>ボーナス</p>
+        <p>{{ bonusPoint }}pt</p>
+      </div>
+      <div class="side-menu-item item2">
+        <p>現在のスコア</p>
+        <h2>{{ point }}pt</h2>
+      </div>
     </div>
   </div>
 </template>
@@ -18,7 +31,7 @@
 import Game from "./__Game.vue";
 export default {
   components: { Game },
-  props: ["point"],
+  props: ["point", "currentPlusPoint", "collideCount", "bonusPoint"],
 };
 </script>
 
@@ -34,12 +47,35 @@ export default {
 }
 .display {
   width: 500px;
-  background-color: whitesmoke;
+  background-color: rgba(230, 176, 252, 0.3);
 }
 .side-menu {
   color: aliceblue;
   background-color: rgba(0, 0, 0, 0.7);
   border-left: 3px solid rgba(0, 0, 0, 0.7);
   width: 125px;
+  position: relative;
+}
+.side-menu-item {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+.item1 {
+  top: 30px;
+}
+.item2 {
+  bottom: 30px;
+}
+.bonus {
+  color: gold;
+  top: 300px;
+  font-size: 12px;
+}
+.bonus h3:first-child {
+  padding-bottom: 10px;
+}
+.hit-count {
+  top: 250px;
 }
 </style>

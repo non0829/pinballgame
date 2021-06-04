@@ -1,18 +1,26 @@
 <template>
   <div class="box">
-    <div class="finishText">
+    <div class="beforeFinishText" :class="{ finishText: isFinish }">
       <h1>Finish!!!</h1>
-      <button>次へ</button>
+      <button @click="next">次へ</button>
+    </div>
+    <div class="description" :class="{ start: isStart }">
+      <h2>Enterキーを押すとスタート</h2>
+      <h2>矢印キーでバーを操作</h2>
     </div>
     <BlockBack />
     <div class="mainGame">
       <Display
         :point="point"
+        :currentPlusPoint="currentPlusPoint"
+        :bonusPoint="bonusPoint"
+        :collideCount="collideCount"
         @minus10="$emit('minus10')"
         @plus10="$emit('plus10')"
         @plus20="$emit('plus20')"
         @plus30="$emit('plus30')"
         @plusRandom="$emit('plusRandom')"
+        @finish="finish"
       />
     </div>
   </div>
@@ -26,7 +34,32 @@ export default {
     BlockBack,
     Display,
   },
-  props: ["point"],
+  props: ["point", "currentPlusPoint", "collideCount", "bonusPoint"],
+  data() {
+    return {
+      isStart: false,
+      isFinish: false,
+    };
+  },
+  methods: {
+    finish() {
+      this.isFinish = !this.isFinish;
+      this.$emit('record')
+    },
+    next() {
+      this.$emit("next");
+    },
+  },
+  mounted() {
+    window.addEventListener("keydown", (e) => {
+      if(this.isStart) {
+        return
+      }
+      if (e.key === "Enter") {
+        this.isStart = !this.isStart;
+      }
+    });
+  },
 };
 </script>
 
@@ -38,12 +71,30 @@ export default {
   position: relative;
   background-color: rgba(0, 0, 0, 0.2);
 }
-.finishText {
+.description {
   position: absolute;
   top: 40%;
   left: 0;
   right: 0;
   z-index: 2;
+  color: rgba(0, 0, 0, 0.6);
+}
+.start {
+  opacity: 0;
+  z-index: 0;
+}
+.beforeFinishText {
+  position: absolute;
+  top: 40%;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 1s;
+}
+.finishText {
+  z-index: 2;
+  opacity: 1;
 }
 .finishText h1 {
   font-size: 50px;
