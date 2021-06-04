@@ -9,11 +9,6 @@ export default {
   data() {
     return {
       ball: {
-        // x: 490,
-        // y: 30,
-        // r: 10,
-        // dx: 1,
-        // dy: 10,
         x: 120,
         y: 200,
         r: 10,
@@ -21,9 +16,9 @@ export default {
         dy: 10,
       },
       bar: {
-        x: 100,
+        x: 220,
         y: 450,
-        dx: 10,
+        dx: 15,
       },
       pin: [
         {
@@ -57,8 +52,8 @@ export default {
           r: 5,
         },
         {
-          x: 100,
-          y: 130,
+          x: 80,
+          y: 110,
           r: 5,
         },
         {
@@ -67,8 +62,13 @@ export default {
           r: 5,
         },
         {
-          x: 400,
-          y: 130,
+          x: 420,
+          y: 110,
+          r: 5,
+        },
+        {
+          x: 10,
+          y: 210,
           r: 5,
         },
         {
@@ -77,7 +77,7 @@ export default {
           r: 5,
         },
         {
-          x: 50,
+          x: 40,
           y: 250,
           r: 5,
         },
@@ -92,13 +92,18 @@ export default {
           r: 5,
         },
         {
-          x: 450,
+          x: 460,
           y: 250,
           r: 5,
         },
         {
           x: 475,
           y: 230,
+          r: 5,
+        },
+        {
+          x: 490,
+          y: 210,
           r: 5,
         },
         {
@@ -117,19 +122,29 @@ export default {
           r: 5,
         },
         {
-          x: 20,
-          y: 370,
+          x: 50,
+          y: 360,
           r: 5,
         },
         {
-          x: 480,
-          y: 370,
+          x: 175,
+          y: 380,
+          r: 5,
+        },
+        {
+          x: 300,
+          y: 380,
+          r: 5,
+        },
+        {
+          x: 425,
+          y: 360,
           r: 5,
         },
       ],
       lineLength: 60,
       point: 0,
-      speed: 100,
+      speed: 60,
     };
   },
   methods: {
@@ -212,7 +227,7 @@ export default {
 
       ctx.beginPath();
       ctx.moveTo(this.bar.x, this.bar.y);
-      ctx.lineTo(this.bar.x + 100, this.bar.y);
+      ctx.lineTo(this.bar.x + 80, this.bar.y);
       ctx.closePath();
       ctx.stroke();
     },
@@ -227,10 +242,10 @@ export default {
           this.ball.dy *= -1;
           console.log("hitLeft");
         }
-        if (this.ball.x > this.bar.x && this.ball.x <= this.bar.x + 100) {
+        if (this.ball.x > this.bar.x && this.ball.x <= this.bar.x + 80) {
           this.ball.dy *= -1;
         }
-        if (this.ball.x > this.bar.x + 100 && this.ball.x <= this.bar.x + 120) {
+        if (this.ball.x > this.bar.x + 80 && this.ball.x <= this.bar.x + 100) {
           if (this.ball.dx > 0) {
             return;
           }
@@ -250,19 +265,27 @@ export default {
           Math.pow(this.ball.r + this.pin[i].r, 2)
         ) {
           if (
-            Math.abs(this.ball.x - this.pin[i].x) <=
-            (this.ball.r + this.pin[i].r) / Math.sqrt(2)
+            Math.abs(this.ball.x - this.pin[i].x) >= this.pin[i].r
           ) {
-            this.ball.dy *= -1;
-            return;
-          }
+            if(this.ball.x < this.pin[i].x && this.ball.dx > 0) {
+              this.ball.dx--
+              this.ball.dx *= -1;
+            }
+            if(this.ball.x > this.pin[i].x && this.ball.dx < 0) {
+              this.ball.dx++
+              this.ball.dx *= -1;
+            }
+          } 
           if (
-            Math.abs(this.ball.y - this.pin[i].y) <=
-            (this.ball.r + this.pin[i].r) / Math.sqrt(2)
+            Math.abs(this.ball.y - this.pin[i].y) >= this.pin[i].r
           ) {
-            this.ball.dx *= -1;
-            return;
-          }
+            if(this.ball.y < this.pin[i].y && this.ball.dy > 0) {
+              this.ball.dy *= -1;
+            }
+            if(this.ball.y > this.pin[i].y && this.ball.dy < 0) {
+              this.ball.dy *= -1;
+            }
+          } 
         }
       }
     },
@@ -271,7 +294,7 @@ export default {
       if (this.ball.x + this.ball.r > 500 || this.ball.x < this.ball.r) {
         this.ball.dx *= -1;
       }
-      if (this.ball.y + this.ball.r > 500 || this.ball.y < this.ball.r) {
+      if (this.ball.y + this.ball.r === 500 || this.ball.y === this.ball.r) {
         this.ball.dy *= -1;
         console.log("bounce");
       }
@@ -285,16 +308,6 @@ export default {
           }
         }
       }
-      // if (Math.abs(this.ball.y - this.ball.r - this.lineLength) < 5) {
-      //   for (let i = 1; i <= 4; i++) {
-      //     if (
-      //       this.ball.x + this.ball.r >= i * 100 - 10 &&
-      //       this.ball.x - this.ball.r <= i * 100 + 10
-      //     ) {
-      //       this.ball.dy *= -1;
-      //     }
-      //   }
-      // }
     },
     pointCheck() {
       if (this.ball.y - this.ball.r !== 0) {
@@ -302,28 +315,27 @@ export default {
       }
       console.log("ポイント追加");
       this.ball.dx =
-        Math.floor(Math.random() * 15) *
+        (Math.floor(Math.random() * 8) + 3) *
         Math.pow(-1, Math.floor(Math.random() * 2));
       if (this.ball.x > 0 && this.ball.x <= 100) {
         this.$emit("plus10");
-        this.speed /= 1.01;
       }
       if (this.ball.x > 100 && this.ball.x <= 200) {
         this.$emit("minus10");
       }
       if (this.ball.x > 200 && this.ball.x <= 300) {
         this.ball.dx =
-          (Math.floor(Math.random() * 5) + 2) *
+          (Math.floor(Math.random() * 10) + 3) *
           Math.pow(-1, Math.floor(Math.random() * 2));
-        this.speed /= 1.03;
         this.$emit("plus30");
       }
       if (this.ball.x > 300 && this.ball.x <= 400) {
-        this.speed /= 1.03;
+        for(let i = 6; i < this.pin.length; i++) {
+          this.pin[i].r++
+        }
         this.$emit("plusRandom");
       }
       if (this.ball.x > 400 && this.ball.x < 500) {
-        this.speed /= 1.02;
         this.$emit("plus20");
       }
     },
@@ -351,8 +363,7 @@ export default {
 
       // 終わり判定
       if (this.ball.y + this.ball.r > 480) {
-        console.log("finish");
-        this.$emit('finish')
+        this.$emit("finish");
         clearTimeout(move);
       }
     },

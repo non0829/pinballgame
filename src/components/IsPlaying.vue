@@ -73,9 +73,9 @@ export default {
 }
 .description {
   position: absolute;
-  top: 40%;
+  top: 42%;
   left: 0;
-  right: 0;
+  right: 0%;
   z-index: 2;
   color: rgba(0, 0, 0, 0.6);
 }

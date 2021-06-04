@@ -47,6 +47,7 @@ export default {
       if (this.currentNumber === 1) {
         this.point = 0;
         this.currentPlusPoint = 0;
+        this.collideCount = 0;
       }
       if (this.currentNumber === 3) {
         this.currentNumber = 0;
@@ -57,6 +58,7 @@ export default {
       if (this.currentNumber === 1) {
         this.point = 0;
         this.currentPlusPoint = 0;
+        this.collideCount = 0;
       }
     },
     minus10() {
