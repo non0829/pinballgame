@@ -23,6 +23,7 @@
 import Home from "./components/Home.vue";
 import IsPlaying from "./components/IsPlaying.vue";
 import Final from "./components/Final.vue";
+import firebase from "firebase";
 
 export default {
   data() {
@@ -31,7 +32,7 @@ export default {
       currentNumber: 0,
       point: 0,
       currentPlusPoint: 0,
-      recordAll: [5, 4, 3, 2, 1],
+      recordAll: [],
       collideCount: 0,
       bonusPoint: 0,
     };
@@ -41,7 +42,30 @@ export default {
     IsPlaying,
     Final,
   },
+  created() {
+    firebase
+      .firestore()
+      .collection("results")
+      .get()
+      .then((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          this.resultAll.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+      });
+  },
   methods: {
+    DisplayResult() {
+      firebase
+        .firestore()
+        .collection("results")
+        .doc("point")
+        .set({
+          result: this.recordAll,
+        });
+    },
     addCurrentNumber() {
       this.currentNumber++;
       if (this.currentNumber === 1) {
@@ -64,57 +88,71 @@ export default {
     minus10() {
       this.currentPlusPoint = Number(-10);
       this.point += this.currentPlusPoint;
-      this.collideCount++
+      this.collideCount++;
       console.log(this.point);
-      this._bonus()
+      this._bonus();
     },
     plus10() {
       this.currentPlusPoint = 10;
       this.point += this.currentPlusPoint;
-      this.collideCount++
-      this._bonus()
+      this.collideCount++;
+      this._bonus();
       console.log(this.point);
     },
     plus20() {
       this.currentPlusPoint = 20;
       this.point += this.currentPlusPoint;
-      this.collideCount++
-      this._bonus()
+      this.collideCount++;
+      this._bonus();
       console.log(this.point);
     },
     plus30() {
       this.currentPlusPoint = 30;
       this.point += this.currentPlusPoint;
-      this.collideCount++
-      this._bonus()
+      this.collideCount++;
+      this._bonus();
       console.log(this.point);
     },
     plusRandom() {
       this.currentPlusPoint = Math.floor(Math.random() * 60) - 30;
-      this.collideCount++
+      this.collideCount++;
       this.point += this.currentPlusPoint;
-      this._bonus()
+      this._bonus();
       console.log(this.point);
     },
     _bonus() {
-      if(this.collideCount % 5 === 0) {
-        this.bonusPoint += 10
-        this.point += this.bonusPoint
+      if (this.collideCount % 5 === 0) {
+        this.bonusPoint += 10;
+        this.point += this.bonusPoint;
       }
     },
     record() {
-      for (let i = 0; i < this.recordAll.length; i++) {
-        if (i === 0 && this.recordAll[i] <= this.point) {
-          this.recordAll.unshift(this.point);
-          this.recordAll.pop();
-          // console.log(this.recordAll);
-          return;
+      if (this.recordAll.length === 0) {
+        this.recordAll.push(this.point);
+      } else if (this.recordAll.length < 5) {
+        for (let i = 0; i < this.recordAll.length; i++) {
+          if (i === 0 && this.recordAll[i] <= this.point) {
+            this.recordAll.unshift(this.point);
+            this.DisplayResult();
+          } else if (this.recordAll[i] <= this.point) {
+            this.recordAll.splice(i, 0, this.point);
+            this.DisplayResult();
+          }
         }
-        if (this.recordAll[i] <= this.point) {
-          this.recordAll.pop();
-          this.recordAll.splice(i, 0, this.point);
-          // console.log(this.recordAll);
-          return;
+      } else {
+        for (let i = 0; i < this.recordAll.length; i++) {
+          if (i === 0 && this.recordAll[i] <= this.point) {
+            this.recordAll.unshift(this.point);
+            this.recordAll.pop();
+            this.DisplayResult();
+            return;
+          }
+          if (this.recordAll[i] <= this.point) {
+            this.recordAll.pop();
+            this.recordAll.splice(i, 0, this.point);
+            this.DisplayResult();
+            return;
+          }
         }
       }
     },

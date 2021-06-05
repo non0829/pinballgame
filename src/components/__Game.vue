@@ -77,11 +77,6 @@ export default {
           r: 5,
         },
         {
-          x: 40,
-          y: 250,
-          r: 5,
-        },
-        {
           x: 175,
           y: 200,
           r: 5,
@@ -89,11 +84,6 @@ export default {
         {
           x: 325,
           y: 200,
-          r: 5,
-        },
-        {
-          x: 460,
-          y: 250,
           r: 5,
         },
         {
@@ -108,17 +98,17 @@ export default {
         },
         {
           x: 100,
-          y: 300,
-          r: 5,
-        },
-        {
-          x: 400,
-          y: 300,
+          y: 280,
           r: 5,
         },
         {
           x: 250,
           y: 300,
+          r: 5,
+        },
+        {
+          x: 400,
+          y: 280,
           r: 5,
         },
         {
@@ -132,12 +122,12 @@ export default {
           r: 5,
         },
         {
-          x: 300,
+          x: 325,
           y: 380,
           r: 5,
         },
         {
-          x: 425,
+          x: 450,
           y: 360,
           r: 5,
         },
@@ -268,11 +258,11 @@ export default {
             Math.abs(this.ball.x - this.pin[i].x) >= this.pin[i].r
           ) {
             if(this.ball.x < this.pin[i].x && this.ball.dx > 0) {
-              this.ball.dx--
+              this.ball.dx -= 2
               this.ball.dx *= -1;
             }
             if(this.ball.x > this.pin[i].x && this.ball.dx < 0) {
-              this.ball.dx++
+              this.ball.dx += 2
               this.ball.dx *= -1;
             }
           } 
@@ -291,7 +281,10 @@ export default {
     },
     collideBorder() {
       // 跳ね返す設定
-      if (this.ball.x + this.ball.r > 500 || this.ball.x < this.ball.r) {
+      if (this.ball.x + this.ball.r > 500 && this.ball.dx > 0) {
+        this.ball.dx *= -1;
+      }
+      if (this.ball.x < this.ball.r && this.ball.dx < 0) {
         this.ball.dx *= -1;
       }
       if (this.ball.y + this.ball.r === 500 || this.ball.y === this.ball.r) {
@@ -300,10 +293,10 @@ export default {
       }
       if (this.ball.y < this.lineLength) {
         for (let i = 1; i <= 4; i++) {
-          if (this.ball.x + this.ball.r >= i * 100) {
+          if (this.ball.x + this.ball.r > i * 100 && this.ball.x < i * 100) {
             this.ball.dx *= -1;
           }
-          if (this.ball.x - this.ball.r <= i * 100) {
+          if (this.ball.x - this.ball.r < i * 100 && this.ball.x > i * 100) {
             this.ball.dx *= -1;
           }
         }
@@ -315,7 +308,7 @@ export default {
       }
       console.log("ポイント追加");
       this.ball.dx =
-        (Math.floor(Math.random() * 8) + 3) *
+        (Math.floor(Math.random() * 7) + 5) *
         Math.pow(-1, Math.floor(Math.random() * 2));
       if (this.ball.x > 0 && this.ball.x <= 100) {
         this.$emit("plus10");
