@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import Game from "./__Game.vue";
+import Game from "./Pinball__Game.vue";
 export default {
   components: { Game },
   props: ["point", "currentPlusPoint", "collideCount", "bonusPoint"],

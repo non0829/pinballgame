@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import BlockBack from "./_BlockBack.vue";
+import BlockBack from "./Pinball_BlockBack.vue";
 export default {
   components: {
     BlockBack,

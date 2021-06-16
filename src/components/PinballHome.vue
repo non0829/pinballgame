@@ -23,9 +23,9 @@
 </template>
 
 <script>
-import BlockBack from "./_BlockBack.vue";
-import description from "./_Description.vue";
-import result from "./_Result.vue";
+import BlockBack from "./Pinball_BlockBack.vue";
+import description from "./Pinball_Description.vue";
+import result from "./Pinball_Result.vue";
 export default {
   components: {
     BlockBack,

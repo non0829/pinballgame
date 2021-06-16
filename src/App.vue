@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import Home from "./components/Home.vue";
-import IsPlaying from "./components/IsPlaying.vue";
-import Final from "./components/Final.vue";
-import firebase from "firebase";
+import Home from "./components/PinballHome.vue";
+import IsPlaying from "./components/PinballIsPlaying.vue";
+import Final from "./components/PinballFinal.vue";
+// import firebase from "firebase";
 
 export default {
   data() {
@@ -42,30 +42,9 @@ export default {
     IsPlaying,
     Final,
   },
-  created() {
-    firebase
-      .firestore()
-      .collection("results")
-      .get()
-      .then((snapshot) => {
-        snapshot.docs.forEach((doc) => {
-          this.resultAll.push({
-            id: doc.id,
-            ...doc.data(),
-          });
-        });
-      });
-  },
+
   methods: {
-    DisplayResult() {
-      firebase
-        .firestore()
-        .collection("results")
-        .doc("point")
-        .set({
-          result: this.recordAll,
-        });
-    },
+   
     addCurrentNumber() {
       this.currentNumber++;
       if (this.currentNumber === 1) {
@@ -127,36 +106,22 @@ export default {
       }
     },
     record() {
-      if (this.recordAll.length === 0) {
-        this.recordAll.push(this.point);
-      } else if (this.recordAll.length < 5) {
-        for (let i = 0; i < this.recordAll.length; i++) {
-          if (i === 0 && this.recordAll[i] <= this.point) {
-            this.recordAll.unshift(this.point);
-            this.DisplayResult();
-          } else if (this.recordAll[i] <= this.point) {
-            this.recordAll.splice(i, 0, this.point);
-            this.DisplayResult();
-          }
-        }
-      } else {
+      
         for (let i = 0; i < this.recordAll.length; i++) {
           if (i === 0 && this.recordAll[i] <= this.point) {
             this.recordAll.unshift(this.point);
             this.recordAll.pop();
-            this.DisplayResult();
             return;
           }
           if (this.recordAll[i] <= this.point) {
             this.recordAll.pop();
             this.recordAll.splice(i, 0, this.point);
-            this.DisplayResult();
             return;
           }
         }
       }
     },
-  },
+  // },
 };
 </script>
 
